@@ -212,6 +212,10 @@
     /* ── Preview ── */
     #uploadWrap { width: 100%; }
     #preview-section { display:none; }
+#batch-section { display:none; }
+#loading { display:none; }
+#results { display:none; }
+#batch-results { display:none; }
 
     .preview-card {
       background:var(--surface);
@@ -224,7 +228,9 @@
       border-bottom:1px solid var(--border);
       display:flex; align-items:center; justify-content:space-between;
       gap:12px;
+      flex-wrap:wrap;
     }
+    .preview-file-info { flex:1; min-width:0; }
     .preview-file-info { display:flex; align-items:center; gap:12px; min-width:0; }
     .file-thumb { width:42px; height:42px; border-radius:7px; object-fit:cover; border:1px solid var(--border); flex-shrink:0; }
     .file-name { font-size:0.86rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px; }
@@ -372,8 +378,10 @@
     .table-wrap {
       background:var(--surface); border:1px solid var(--border);
       border-radius:14px; overflow:hidden; overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
     }
-    table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+    table { width:100%; border-collapse:collapse; font-size:0.8rem; min-width:560px; }
+    
 
     thead th {
       background:var(--surface2); padding:11px 16px;
