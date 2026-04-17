@@ -12,11 +12,12 @@ func makeNoisyImage(width, height int) image.Image {
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			// Alternate between very dark and very bright — simulates noise
-			if (x*y)%3 == 0 {
+			switch (x * y) % 3 {
+			case 0:
 				img.SetGray(x, y, color.Gray{Y: 10})
-			} else if (x*y)%3 == 1 {
+			case 1:
 				img.SetGray(x, y, color.Gray{Y: 245})
-			} else {
+			default:
 				img.SetGray(x, y, color.Gray{Y: 128})
 			}
 		}

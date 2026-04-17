@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Image Analyzer</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <header>
     <div class="logo">
       <div class="logo-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/></svg>
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        </svg>
       </div>
       <div class="logo-text">Image<span>Analyzer</span></div>
     </div>
@@ -25,13 +33,18 @@
   <main>
     <div class="page-eyebrow">Photo Quality Tool</div>
     <h1 class="page-title">Instant Image Analysis</h1>
-    <p class="page-sub">Upload a photo for a full technical quality report — sharpness, exposure, noise, and EXIF metadata.</p>
+    <p class="page-sub">Upload a photo for a full technical quality report — sharpness, exposure, noise, and EXIF
+      metadata.</p>
 
     <!-- Upload -->
-    <div id="uploadWrap">
+    <div id="uploadWrap" style="width:100%">
       <div class="upload-area" id="uploadArea">
         <div class="upload-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
         </div>
         <div class="upload-title">Drop your photo here</div>
         <div class="upload-sub">or <span>click to browse</span></div>
@@ -74,7 +87,9 @@
 
     <!-- Loading -->
     <div id="loading">
-      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
+      </div>
       <div class="loading-text" id="loadingText">Analyzing your image…</div>
     </div>
 
@@ -85,9 +100,9 @@
           <!-- SVG arc score ring -->
           <div class="score-arc-wrap">
             <svg viewBox="0 0 80 80">
-              <circle class="score-arc-bg" cx="40" cy="40" r="34"/>
-              <circle class="score-arc-fg" id="scoreArc" cx="40" cy="40" r="34"
-                stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+              <circle class="score-arc-bg" cx="40" cy="40" r="34" />
+              <circle class="score-arc-fg" id="scoreArc" cx="40" cy="40" r="34" stroke-dasharray="213.6"
+                stroke-dashoffset="213.6" />
             </svg>
             <div class="score-center">
               <span class="score-num" id="scoreNum">—</span>
@@ -127,7 +142,9 @@
           <div class="metric">
             <span class="metric-label">Score</span>
             <div class="metric-bar-wrap">
-              <div class="mini-bar"><div class="mini-bar-fill" id="rSharpBar" style="width:0%;background:var(--good)"></div></div>
+              <div class="mini-bar">
+                <div class="mini-bar-fill" id="rSharpBar" style="width:0%;background:var(--good)"></div>
+              </div>
               <span class="metric-value" id="rSharpness">—</span>
             </div>
           </div>
@@ -143,7 +160,9 @@
           <div class="metric">
             <span class="metric-label">Brightness</span>
             <div class="metric-bar-wrap">
-              <div class="mini-bar"><div class="mini-bar-fill" id="rBrightBar" style="width:0%;background:var(--warn)"></div></div>
+              <div class="mini-bar">
+                <div class="mini-bar-fill" id="rBrightBar" style="width:0%;background:var(--warn)"></div>
+              </div>
               <span class="metric-value" id="rBrightness">—</span>
             </div>
           </div>
@@ -159,7 +178,9 @@
           <div class="metric">
             <span class="metric-label">Level</span>
             <div class="metric-bar-wrap">
-              <div class="mini-bar"><div class="mini-bar-fill" id="rNoiseBar" style="width:0%;background:var(--bad)"></div></div>
+              <div class="mini-bar">
+                <div class="mini-bar-fill" id="rNoiseBar" style="width:0%;background:var(--bad)"></div>
+              </div>
               <span class="metric-value" id="rNoise">—</span>
             </div>
           </div>
@@ -179,7 +200,9 @@
           <div class="metric">
             <span class="metric-label">Vibrance</span>
             <div class="metric-bar-wrap">
-              <div class="mini-bar"><div class="mini-bar-fill" id="rVibranceBar" style="width:0%;background:var(--accent)"></div></div>
+              <div class="mini-bar">
+                <div class="mini-bar-fill" id="rVibranceBar" style="width:0%;background:var(--accent)"></div>
+              </div>
               <span class="metric-value" id="rVibrance">—</span>
             </div>
           </div>
@@ -218,11 +241,18 @@
 
       <div class="bottom-actions">
         <button class="btn-export" id="exportSingleCSV">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
           Export CSV
         </button>
         <button class="btn-export" onclick="resetAll()">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
           Analyze another
         </button>
       </div>
@@ -253,7 +283,11 @@
       </div>
       <div class="bottom-actions">
         <button class="btn-export" id="exportBatchCSV">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
           Export all as CSV
         </button>
       </div>
@@ -263,4 +297,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
