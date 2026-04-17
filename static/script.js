@@ -6,7 +6,7 @@ let lastSingleResult = null;
 let lastBatchResults = null;
 let batchObjectURLs = []; // track URLs to revoke (memory leak fix)
 
-const CIRC = 2 * Math.PI * 34; // ~213.6
+const CIRC = 2 * Math.PI * 34; 
 
 // ── Mode switch ──
 function switchMode(m) {
@@ -49,14 +49,33 @@ function handleSingleFile(file) {
   showOnly('preview-section');
 }
 
+async function resizeIfNeeded(file, maxPx = 1600) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      if (img.width <= maxPx && img.height <= maxPx) { resolve(file); return; }
+      const scale = maxPx / Math.max(img.width, img.height);
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => resolve(new File([blob], file.name, { type:'image/jpeg' })), 'image/jpeg', 0.88);
+    };
+    img.src = url;
+  });
+}
+
 document.getElementById('analyzeBtn').addEventListener('click', async () => {
   if (!singleFile) return;
   const btn = document.getElementById('analyzeBtn');
   btn.disabled = true;
   setLoading(true, 'Analyzing your image…');
 
+  const compressed = await resizeIfNeeded(singleFile);
   const form = new FormData();
-  form.append('image', singleFile);
+  form.append('image', compressed);
 
   try {
     const res  = await fetch('/analyze', { method:'POST', body:form });
@@ -189,8 +208,10 @@ document.getElementById('batchAnalyzeBtn').addEventListener('click', async () =>
   btn.disabled = true;
   setLoading(true, `Analyzing ${batchFiles.length} image${batchFiles.length > 1 ? 's' : ''}…`);
 
+  setLoading(true, `Compressing ${batchFiles.length} image${batchFiles.length > 1 ? 's' : ''}…`);
+  const compressed = await Promise.all(batchFiles.map(f => resizeIfNeeded(f)));
   const form = new FormData();
-  batchFiles.forEach(f => form.append('images', f));
+  compressed.forEach(f => form.append('images', f));
 
   try {
     const res  = await fetch('/analyze-batch', { method:'POST', body:form });
