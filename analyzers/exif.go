@@ -2,7 +2,7 @@ package analyzers
 
 import (
 	"bytes"
-	"fmt"
+	"strings"
 
 	"github.com/rwcarlsen/goexif/exif"
 )
@@ -28,10 +28,17 @@ func ReadExif(imageData []byte) ExifData {
 	}
 
 	if cam, err := x.Get(exif.Model); err == nil {
-		result.Camera = cam.String()
+		// cam.String() wraps value in quotes e.g. "Inspiron 14 5440" — strip them
+		result.Camera = strings.Trim(cam.String(), "\"")
 	}
 	if iso, err := x.Get(exif.ISOSpeedRatings); err == nil {
-		result.ISO = fmt.Sprintf("%v", iso)
+		// iso.String() returns "[800]" style — use StringVal for clean output
+		if v, err := iso.Int(0); err == nil {
+			result.ISO = strings.TrimSpace(strings.Trim(iso.String(), "[]"))
+			_ = v
+		} else {
+			result.ISO = strings.Trim(iso.String(), "[]")
+		}
 	}
 	if fl, err := x.Get(exif.FocalLength); err == nil {
 		result.FocalLength = fl.String()
