@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Image Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/></svg>
+      </div>
+      <div class="logo-text">Image<span>Analyzer</span></div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeSingle" onclick="switchMode('single')">Single</button>
+      <button class="mode-btn" id="modeBatch" onclick="switchMode('batch')">Batch</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-eyebrow">Photo Quality Tool</div>
+    <h1 class="page-title">Instant Image Analysis</h1>
+    <p class="page-sub">Upload a photo for a full technical quality report — sharpness, exposure, noise, and EXIF metadata.</p>
+
+    <!-- Upload -->
+    <div id="uploadWrap">
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="upload-title">Drop your photo here</div>
+        <div class="upload-sub">or <span>click to browse</span></div>
+        <div class="upload-hint" id="uploadHint">JPG, PNG · max 10 MB per file</div>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png" />
+      </div>
+    </div>
+
+    <!-- Single preview -->
+    <div id="preview-section">
+      <div class="preview-card">
+        <div class="preview-top">
+          <div class="preview-file-info">
+            <img class="file-thumb" id="previewThumb" src="" alt="">
+            <div>
+              <div class="file-name" id="previewName">—</div>
+              <div class="file-meta" id="previewMeta">—</div>
+            </div>
+          </div>
+          <div class="preview-actions">
+            <button class="btn-ghost" onclick="resetAll()">Change</button>
+            <button class="btn-primary" id="analyzeBtn">Analyze →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Batch queue -->
+    <div id="batch-section">
+      <div class="batch-header">
+        <div class="batch-title">Queue</div>
+        <div class="batch-count" id="batchCount">0 images</div>
+      </div>
+      <div class="batch-list" id="batchList"></div>
+      <div class="batch-actions">
+        <button class="btn-ghost" onclick="resetAll()">Clear all</button>
+        <button class="btn-primary" id="batchAnalyzeBtn">Analyze all →</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="loading-text" id="loadingText">Analyzing your image…</div>
+    </div>
+
+    <!-- Single result -->
+    <div id="results">
+      <div class="result-header">
+        <div class="score-block">
+          <!-- SVG arc score ring -->
+          <div class="score-arc-wrap">
+            <svg viewBox="0 0 80 80">
+              <circle class="score-arc-bg" cx="40" cy="40" r="34"/>
+              <circle class="score-arc-fg" id="scoreArc" cx="40" cy="40" r="34"
+                stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+            </svg>
+            <div class="score-center">
+              <span class="score-num" id="scoreNum">—</span>
+              <span class="score-denom">/ 100</span>
+            </div>
+          </div>
+          <div class="score-desc">
+            <h2 id="scoreTitle">—</h2>
+            <p id="scoreSubtitle">—</p>
+          </div>
+        </div>
+        <button class="btn-ghost" onclick="resetAll()">← New image</button>
+      </div>
+
+      <div class="cards-grid">
+
+        <!-- Image info -->
+        <div class="card" style="animation-delay:0s">
+          <div class="card-label">Image Info</div>
+          <div class="metric">
+            <span class="metric-label">Dimensions</span>
+            <span class="metric-value" id="rDimensions">—</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Aspect ratio</span>
+            <span class="metric-value" id="rAspect">—</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">File size</span>
+            <span class="metric-value" id="rFileSize">—</span>
+          </div>
+        </div>
+
+        <!-- Blur -->
+        <div class="card" style="animation-delay:0.05s">
+          <div class="card-label">Sharpness</div>
+          <div class="metric">
+            <span class="metric-label">Score</span>
+            <div class="metric-bar-wrap">
+              <div class="mini-bar"><div class="mini-bar-fill" id="rSharpBar" style="width:0%;background:var(--good)"></div></div>
+              <span class="metric-value" id="rSharpness">—</span>
+            </div>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Status</span>
+            <span class="badge" id="rBlurBadge">—</span>
+          </div>
+        </div>
+
+        <!-- Brightness -->
+        <div class="card" style="animation-delay:0.09s">
+          <div class="card-label">Exposure</div>
+          <div class="metric">
+            <span class="metric-label">Brightness</span>
+            <div class="metric-bar-wrap">
+              <div class="mini-bar"><div class="mini-bar-fill" id="rBrightBar" style="width:0%;background:var(--warn)"></div></div>
+              <span class="metric-value" id="rBrightness">—</span>
+            </div>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Status</span>
+            <span class="badge" id="rBrightBadge">—</span>
+          </div>
+        </div>
+
+        <!-- Noise -->
+        <div class="card" style="animation-delay:0.13s">
+          <div class="card-label">Noise</div>
+          <div class="metric">
+            <span class="metric-label">Level</span>
+            <div class="metric-bar-wrap">
+              <div class="mini-bar"><div class="mini-bar-fill" id="rNoiseBar" style="width:0%;background:var(--bad)"></div></div>
+              <span class="metric-value" id="rNoise">—</span>
+            </div>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Status</span>
+            <span class="badge" id="rNoiseBadge">—</span>
+          </div>
+        </div>
+
+        <!-- Color Profile -->
+        <div class="card full" style="animation-delay:0.17s">
+          <div class="card-label">Color Profile</div>
+          <div class="metric">
+            <span class="metric-label">Dominant color</span>
+            <span class="metric-value" id="rDominant">—</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Vibrance</span>
+            <div class="metric-bar-wrap">
+              <div class="mini-bar"><div class="mini-bar-fill" id="rVibranceBar" style="width:0%;background:var(--accent)"></div></div>
+              <span class="metric-value" id="rVibrance">—</span>
+            </div>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Colorful</span>
+            <span class="badge" id="rColorfulBadge">—</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Avg RGB</span>
+            <span class="metric-value" id="rAvgRGB">—</span>
+          </div>
+        </div>
+
+        <!-- EXIF full width -->
+        <div class="card full" style="animation-delay:0.21s">
+          <div class="card-label">EXIF Metadata</div>
+          <div class="metric">
+            <span class="metric-label">Camera</span>
+            <span class="metric-value" id="rCamera">—</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">ISO</span>
+            <span class="metric-value" id="rISO">—</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Focal length</span>
+            <span class="metric-value" id="rFocal">—</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Exposure time</span>
+            <span class="metric-value" id="rExposure">—</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="bottom-actions">
+        <button class="btn-export" id="exportSingleCSV">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+        <button class="btn-export" onclick="resetAll()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Analyze another
+        </button>
+      </div>
+    </div>
+
+    <!-- Batch results -->
+    <div id="batch-results">
+      <div class="batch-results-header">
+        <h2 id="batchResultsTitle">Results</h2>
+        <button class="btn-ghost" onclick="resetAll()">← New batch</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Size</th>
+              <th>Dimensions</th>
+              <th>Sharpness</th>
+              <th>Blur</th>
+              <th>Brightness</th>
+              <th>Noise</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody id="batchTableBody"></tbody>
+        </table>
+      </div>
+      <div class="bottom-actions">
+        <button class="btn-export" id="exportBatchCSV">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export all as CSV
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
