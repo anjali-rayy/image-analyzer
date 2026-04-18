@@ -2,6 +2,7 @@ package analyzers
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 
 	"github.com/rwcarlsen/goexif/exif"
@@ -33,18 +34,19 @@ func ReadExif(imageData []byte) ExifData {
 	}
 	if iso, err := x.Get(exif.ISOSpeedRatings); err == nil {
 		// iso.String() returns "[800]" style — use StringVal for clean output
-		if v, err := iso.Int(0); err == nil {
-			result.ISO = strings.TrimSpace(strings.Trim(iso.String(), "[]"))
-			_ = v
-		} else {
-			result.ISO = strings.Trim(iso.String(), "[]")
-		}
+		result.ISO = strings.TrimSpace(strings.Trim(iso.String(), "[]"))
 	}
 	if fl, err := x.Get(exif.FocalLength); err == nil {
-		result.FocalLength = fl.String()
+		num, err1 := fl.Rat(0)
+		if err1 == nil {
+			f, _ := num.Float64()
+			result.FocalLength = fmt.Sprintf("%.0fmm", f)
+		} else {
+			result.FocalLength = fl.String()
+		}
 	}
 	if et, err := x.Get(exif.ExposureTime); err == nil {
-		result.ExposureTime = et.String()
+		result.ExposureTime = et.String() + "s"
 	}
 
 	return result

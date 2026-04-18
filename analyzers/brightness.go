@@ -1,6 +1,9 @@
 package analyzers
 
-import "image"
+import (
+	"image"
+	"math"
+)
 
 func CheckBrightness(img image.Image) (float64, string) {
 	bounds := img.Bounds()
@@ -27,5 +30,5 @@ func CheckBrightness(img image.Image) (float64, string) {
 		status = "too bright"
 	}
 
-	return float64(int(avg*100)) / 100, status
+	return math.Round(avg*100) / 100, status
 }

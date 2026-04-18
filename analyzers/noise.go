@@ -38,15 +38,15 @@ func DetectNoise(img image.Image) (float64, string) {
 		}
 	}
 
-	noiseLevel := (totalDiff / float64(count)) * 100
+	noiseLevel := totalDiff / float64(count)
 
 	// Round to 2 decimal places
 	noiseLevel = math.Round(noiseLevel*100) / 100
 
 	status := "clean"
-	if noiseLevel > 5.0 {
+	if noiseLevel > 0.05 {
 		status = "noisy"
-	} else if noiseLevel > 2.5 {
+	} else if noiseLevel > 0.025 {
 		status = "moderate"
 	}
 
