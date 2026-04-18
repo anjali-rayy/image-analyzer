@@ -49,6 +49,29 @@ function handleSingleFile(file) {
   showOnly('preview-section');
 }
 
+function readExifFromFile(file) {
+  return new Promise((resolve) => {
+    EXIF.getData(file, function () {
+      const make  = EXIF.getTag(this, "Make")  || "";
+      const model = EXIF.getTag(this, "Model") || "";
+      const iso   = EXIF.getTag(this, "ISOSpeedRatings") || "";
+      const focal = EXIF.getTag(this, "FocalLength") || "";
+      const expo  = EXIF.getTag(this, "ExposureTime") || "";
+      let camera = "unknown";
+      if (make && model) {
+        camera = model.startsWith(make) ? model : `${make} ${model}`;
+      } else if (model) { camera = model; }
+        else if (make)  { camera = make;  }
+      resolve({
+        camera:        camera        || "unknown",
+        iso:           iso ? String(iso) : "unknown",
+        focal_length:  focal ? `${focal}mm` : "unknown",
+        exposure_time: expo  ? `${expo}s`   : "unknown",
+      });
+    });
+  });
+}
+
 async function resizeIfNeeded(file, maxPx = 1600) {
   return new Promise(resolve => {
     const img = new Image();
@@ -71,11 +94,15 @@ document.getElementById('analyzeBtn').addEventListener('click', async () => {
   if (!singleFile) return;
   const btn = document.getElementById('analyzeBtn');
   btn.disabled = true;
-  setLoading(true, 'Analyzing your image…');
+  setLoading(true, 'Reading metadata…');
 
+  const clientExif = await readExifFromFile(singleFile);
+
+  setLoading(true, 'Analyzing your image…');
   const compressed = await resizeIfNeeded(singleFile);
   const form = new FormData();
   form.append('image', compressed);
+  form.append('client_exif', JSON.stringify(clientExif));
 
   try {
     const res  = await fetch('/analyze', { method:'POST', body:form });

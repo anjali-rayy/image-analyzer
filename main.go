@@ -90,6 +90,16 @@ func handleAnalyze(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result := analyzeImage(imageData, header.Filename, header.Size)
+
+	// Use client-side EXIF as fallback if server couldn't read it
+	clientExifJSON := r.FormValue("client_exif")
+	if clientExifJSON != "" && result.Exif.Camera == "unknown" {
+		var clientExif analyzers.ExifData
+		if err := json.Unmarshal([]byte(clientExifJSON), &clientExif); err == nil {
+			result.Exif = clientExif
+		}
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 }
