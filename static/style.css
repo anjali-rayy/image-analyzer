@@ -134,6 +134,7 @@
       border:1.5px dashed var(--border2);
       border-radius:18px;
       padding:72px 32px;
+      /* mobile override below in media query */
       text-align:center;
       cursor:pointer;
       transition:border-color 0.2s, background 0.2s;
@@ -376,7 +377,7 @@
       -webkit-overflow-scrolling:touch;
     }
     table { width:100%; border-collapse:collapse; font-size:0.8rem; min-width:560px; }
-    
+    @media(max-width:600px) { table { min-width:unset; } }
 
     thead th {
       background:var(--surface2); padding:11px 16px;
@@ -394,6 +395,30 @@
     }
     tbody td:first-child { color:var(--text); font-family:'DM Sans',sans-serif; max-width:160px; overflow:hidden; text-overflow:ellipsis; }
 
+    @media(max-width:700px) {
+      .table-wrap { overflow-x:unset; border:none; background:transparent; }
+      table { min-width:unset !important; }
+      table, thead, tbody, th, td, tr { display:block; }
+      thead { display:none; }
+      tbody tr {
+        background:var(--surface); border:1px solid var(--border);
+        border-radius:12px; margin-bottom:10px; padding:4px 0;
+      }
+      tbody td {
+        display:flex !important; justify-content:space-between; align-items:center;
+        padding:8px 14px !important; white-space:normal !important;
+        border-bottom:1px solid var(--border); font-size:0.78rem;
+      }
+      tbody td:last-child { border-bottom:none; }
+      tbody td:first-child { max-width:100% !important; font-weight:600; color:var(--text); }
+      tbody td::before {
+        content: attr(data-label);
+        color:var(--text3); font-size:0.65rem;
+        font-family:'DM Mono',monospace; text-transform:uppercase;
+        letter-spacing:1px; flex-shrink:0; margin-right:8px;
+      }
+    }
+
     .score-cell { font-weight:600; }
     .score-cell.good { color:var(--good); }
     .score-cell.ok   { color:var(--warn); }
@@ -405,9 +430,19 @@
     ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
 
     /* ── Responsive ── */
-    @media(max-width:600px) {
+    @media(max-width:700px) {
       header { padding:14px 18px; }
       main   { padding:36px 16px 80px; }
+      .upload-area { padding:44px 20px; }
+      .upload-icon { width:42px; height:42px; margin-bottom:16px; }
       .page-title { font-size:1.8rem; }
       .file-name { max-width:180px; }
+      .mode-btn { padding:5px 11px; font-size:0.72rem; }
+      .logo-text { font-size:0.82rem; }
+      .bottom-actions { flex-direction:column; }
+      .btn-export, .btn-ghost, .btn-primary { width:100%; justify-content:center; }
+      .score-desc p { max-width:100%; }
+      .batch-actions { flex-direction:column; }
+      .batch-actions .btn-ghost,
+      .batch-actions .btn-primary { width:100%; justify-content:center; }
     }

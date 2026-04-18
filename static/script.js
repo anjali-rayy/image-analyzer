@@ -233,8 +233,6 @@ document.getElementById('batchAnalyzeBtn').addEventListener('click', async () =>
   if (batchFiles.length === 0) return;
   const btn = document.getElementById('batchAnalyzeBtn');
   btn.disabled = true;
-  setLoading(true, `Analyzing ${batchFiles.length} image${batchFiles.length > 1 ? 's' : ''}…`);
-
   setLoading(true, `Compressing ${batchFiles.length} image${batchFiles.length > 1 ? 's' : ''}…`);
   const compressed = await Promise.all(batchFiles.map(f => resizeIfNeeded(f)));
   const form = new FormData();
@@ -277,14 +275,14 @@ function showBatchResults(data) {
     const noiseCls = r.noise.status === 'clean'       ? 'good' : r.noise.status === 'noisy' ? 'bad' : 'warn';
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td title="${escHtml(r.file_name)}">${escHtml(r.file_name)}</td>
-      <td>${formatSize(r.file_size)}</td>
-      <td>${r.width}×${r.height}</td>
-      <td>${r.blur.sharpness}</td>
-      <td><span class="badge badge-${blurCls}">${r.blur.status}</span></td>
-      <td><span class="badge badge-${brCls}">${r.brightness.status}</span></td>
-      <td><span class="badge badge-${noiseCls}">${r.noise.status}</span></td>
-      <td class="score-cell ${cls}">${score}</td>`;
+      <td data-label="File" title="${escHtml(r.file_name)}">${escHtml(r.file_name)}</td>
+      <td data-label="Size">${formatSize(r.file_size)}</td>
+      <td data-label="Dimensions">${r.width}×${r.height}</td>
+      <td data-label="Sharpness">${r.blur.sharpness}</td>
+      <td data-label="Blur"><span class="badge badge-${blurCls}">${r.blur.status}</span></td>
+      <td data-label="Brightness"><span class="badge badge-${brCls}">${r.brightness.status}</span></td>
+      <td data-label="Noise"><span class="badge badge-${noiseCls}">${r.noise.status}</span></td>
+      <td data-label="Score" class="score-cell ${cls}">${score}</td>`;
     tbody.appendChild(tr);
   });
 }
