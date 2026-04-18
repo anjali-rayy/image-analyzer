@@ -37,10 +37,10 @@ func DetectBlur(img image.Image) (float64, string) {
 	c := float64(count)
 	mean := sum / c
 	variance := (sumSq / c) - (mean * mean)
-	sharpness := math.Sqrt(math.Abs(variance)) * 100
+	sharpness := math.Sqrt(math.Abs(variance))
 
 	status := "sharp"
-	if sharpness < 3.0 {
+	if sharpness < 0.03 {
 		status = "blurry"
 	}
 

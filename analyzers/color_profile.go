@@ -25,9 +25,9 @@ func AnalyzeColor(img image.Image) ColorProfile {
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			r, g, b, _ := img.At(x, y).RGBA()
-			sumR += float64(r) / 257.0 // convert 0–65535 to 0–255
-			sumG += float64(g) / 257.0
-			sumB += float64(b) / 257.0
+			sumR += float64(r) / 65535.0 * 255.0
+			sumG += float64(g) / 65535.0 * 255.0
+			sumB += float64(b) / 65535.0 * 255.0
 		}
 	}
 
@@ -50,7 +50,7 @@ func AnalyzeColor(img image.Image) ColorProfile {
 	// High spread = colorful, low spread = gray/neutral
 	mean := (avgR + avgG + avgB) / 3
 	variance := (math.Pow(avgR-mean, 2) + math.Pow(avgG-mean, 2) + math.Pow(avgB-mean, 2)) / 3
-	vibrance := math.Min(100, math.Sqrt(variance)*3)
+	vibrance := math.Min(100, math.Sqrt(variance)*5)
 
 	return ColorProfile{
 		Dominant: dominant,

@@ -235,9 +235,9 @@ func analyzeImage(imageData []byte, fileName string, fileSize int64) AnalysisRes
 
 func calculateScore(sharpness, brightness, noise float64) float64 {
 	score := 100.0
-	if sharpness < 3.0 {
+	if sharpness < 0.03 {
 		score -= 40
-	} else if sharpness < 6.0 {
+	} else if sharpness < 0.06 {
 		score -= 20
 	}
 	if brightness < 20 || brightness > 80 {
@@ -245,9 +245,9 @@ func calculateScore(sharpness, brightness, noise float64) float64 {
 	} else if brightness < 30 || brightness > 70 {
 		score -= 10
 	}
-	if noise > 5.0 {
+	if noise > 0.05 {
 		score -= 20
-	} else if noise > 2.5 {
+	} else if noise > 0.025 {
 		score -= 10
 	}
 	if score < 0 {
