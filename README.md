@@ -8,24 +8,25 @@ A full-stack image analysis tool built in **Go** that performs real-time technic
 
 ## Screenshots
 
-<table>
-  <tr>
-    <td align="center"><b>Upload</b></td>
-    <td align="center"><b>Analysis Result</b></td>
-  </tr>
-  <tr>
-    <td><img src="screenshots/upload.png" width="220"/></td>
-    <td><img src="screenshots/single-result.png" width="220"/></td>
-  </tr>
-  <tr>
-    <td align="center"><b>EXIF Metadata</b></td>
-    <td align="center"><b>Batch Mode</b></td>
-  </tr>
-  <tr>
-    <td><img src="screenshots/exif.png" width="220"/></td>
-    <td><img src="screenshots/batch-results.png" width="220"/></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="screenshots/upload.png" width="180" alt="Upload"/>
+  &nbsp;&nbsp;
+  <img src="screenshots/single-result.png" width="180" alt="Analysis Result"/>
+  &nbsp;&nbsp;
+  <img src="screenshots/exif.png" width="180" alt="EXIF Metadata"/>
+</p>
+<p align="center">
+  <sub>Upload &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Analysis Result &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXIF Metadata</sub>
+</p>
+
+<p align="center">
+  <img src="screenshots/batch-queue.png" width="180" alt="Batch Queue"/>
+  &nbsp;&nbsp;
+  <img src="screenshots/batch-results.png" width="180" alt="Batch Results"/>
+</p>
+<p align="center">
+  <sub>Batch Queue &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Batch Results</sub>
+</p>
 
 ---
 
@@ -67,12 +68,12 @@ Browser (upload)
     └── POST /analyze  { image, client_exif }
               │
               Go Server
-              ├── ReadExif()       ← goexif on raw bytes
-              ├── DetectBlur()     ← Laplacian variance
-              ├── CheckBrightness()← avg luminance
-              ├── DetectNoise()    ← neighbor diff
-              └── AnalyzeColor()   ← dominant hue + vibrance
-              
+              ├── ReadExif()        ← goexif on raw bytes
+              ├── DetectBlur()      ← Laplacian variance
+              ├── CheckBrightness() ← avg luminance
+              ├── DetectNoise()     ← neighbor diff
+              └── AnalyzeColor()    ← dominant hue + vibrance
+
               (all 5 run concurrently via goroutines)
 ```
 
